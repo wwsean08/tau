@@ -3,11 +3,12 @@ import os
 import requests
 
 from django.apps import AppConfig
+from django.conf import settings
 
 from constance import config
 
 import tau.twitchevents.webhook_payloads as webhook_payloads
-from .utils import refresh_access_token, setup_ngrok
+from .utils import refresh_access_token, setup_ngrok, log_request
 
 class CoreConfig(AppConfig):
     name = 'tau.core'
@@ -93,11 +94,13 @@ class CoreConfig(AppConfig):
                 headers=headers
             )
         
-        requests.post(
+        resp = requests.post(
             'https://api.twitch.tv/helix/eventsub/subscriptions',
             json=payload,
             headers=webhook_headers
         )
+        if(settings.DEBUG_TWITCH_CALLS):
+            log_request(resp)
         #TODO Add code to handle bad response from initial sub handshake
 
     @staticmethod
@@ -109,13 +112,18 @@ class CoreConfig(AppConfig):
         }
 
         resp = requests.get('https://api.twitch.tv/helix/eventsub/subscriptions', headers=headers)
-
+        if(settings.DEBUG_TWITCH_CALLS):
+            log_request(resp)
         data = resp.json()
+
         for row in data['data']:
-            requests.delete(
+            del_resp = requests.delete(
                 'https://api.twitch.tv/helix/eventsub/subscriptions?id={}'.format(row['id']),
                 headers=headers
             )
+            if(settings.DEBUG_TWITCH_CALLS):
+                log_request(del_resp)
+
 
         headers = {'Authorization': f'Token {worker_token}'}
 

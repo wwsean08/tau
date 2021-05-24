@@ -3,6 +3,7 @@ from .common import Common
 
 
 class Production(Common):
+    DEBUG = os.environ.get('DEBUG', False)
     INSTALLED_APPS = Common.INSTALLED_APPS
 
     ins = list(Common.MIDDLEWARE).index('django.middleware.security.SecurityMiddleware')

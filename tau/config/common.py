@@ -21,6 +21,8 @@ class Common(Configuration):  # pylint: disable=no-init
     USE_NGROK = (os.environ.get("USE_NGROK", "False") == "True" and
                     os.environ.get("RUN_MAIN", None) != "true")
 
+    DEBUG_TWITCH_CALLS = os.environ.get("DEBUG_TWITCH_CALLS", "False") == "True"
+
     INSTALLED_APPS = (
         'django.contrib.admin',
         'django.contrib.auth',
