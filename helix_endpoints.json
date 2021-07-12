@@ -44,7 +44,7 @@
         "endpoint": "extensions/transactions",
         "method": "GET",
         "reference_url": "https://dev.twitch.tv/docs/api/reference#get-extension-transactions",
-        "token_type": "OAuth",
+        "token_type": "AppAccess",
         "scope": null
     },
     {
